@@ -12,7 +12,7 @@ tasks_bp = Blueprint("tasks", __name__)
 def get_tasks():
     user_id = get_jwt_identity()
     tasks = Task.query.filter_by(user_id=user_id).all()
-    return jsonify([{"id": t.id, "title": t.title, "done": t.done} for t in tasks])
+    return jsonify([{"id": t.id, "title": t.title, "completed": t.done} for t in tasks])
 
 # ✅ Create a new task
 @tasks_bp.route("/tasks", methods=["POST"])
@@ -23,7 +23,11 @@ def create_task():
     new_task = Task(title=data["title"], done=False, user_id=user_id)
     db.session.add(new_task)
     db.session.commit()
-    return jsonify({"msg": "Task created", "id": new_task.id})
+    return jsonify({
+        "id": new_task.id,
+        "title": new_task.title,
+        "completed": new_task.done
+    }), 201
 
 # ✅ Update a task
 @tasks_bp.route("/tasks/<int:task_id>", methods=["PUT"])
@@ -35,9 +39,13 @@ def update_task(task_id):
         return jsonify({"msg": "Task not found"}), 404
     data = request.get_json()
     task.title = data.get("title", task.title)
-    task.done = data.get("done", task.done)
+    task.done = data.get("completed", task.done)   # 👈 accept completed
     db.session.commit()
-    return jsonify({"msg": "Task updated"})
+    return jsonify({
+        "id": task.id,
+        "title": task.title,
+        "completed": task.done
+    })
 
 # ✅ Delete a task
 @tasks_bp.route("/tasks/<int:task_id>", methods=["DELETE"])

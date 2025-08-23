@@ -1,36 +1,62 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-    <div class="w-full max-w-sm bg-white p-6 rounded-xl shadow-md">
-      <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
-
-      <form @submit.prevent="handleLogin">
-        <input
-          v-model="username"
-          type="text"
-          placeholder="Username"
-          class="w-full border p-2 rounded mb-3"
-        />
-        <input
-          v-model="password"
-          type="password"
-          placeholder="Password"
-          class="w-full border p-2 rounded mb-3"
-        />
-        <button
-          type="submit"
-          class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-        >
-          Login
-        </button>
-      </form>
-
-      <!-- error message -->
-      <p v-if="error" class="text-red-500 mt-3 text-center">{{ error }}</p>
-
-      <!-- success message -->
-      <p v-if="success" class="text-green-600 mt-3 text-center font-semibold">
-        {{ success }}
+  <div class="flex min-h-screen">
+    <!-- Left side with gradient / branding -->
+    <div class="hidden lg:flex flex-col justify-center items-center w-1/2 bg-gradient-to-br from-indigo-600 via-blue-500 to-purple-600 text-white p-12">
+      <h1 class="text-4xl font-extrabold mb-4">🚀 MyTodo</h1>
+      <p class="text-lg text-indigo-100 max-w-sm text-center">
+        Stay organized and boost productivity with your personal task manager.
       </p>
+    </div>
+
+    <!-- Right side login form -->
+    <div class="flex flex-1 justify-center items-center bg-gray-50">
+      <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition">
+        <h2 class="text-3xl font-extrabold mb-6 text-center text-gray-800">Welcome Back 👋</h2>
+
+        <form @submit.prevent="handleLogin" class="space-y-5">
+          <div>
+            <label class="block mb-1 text-sm font-medium text-gray-700">Username</label>
+            <input
+              v-model="username"
+              type="text"
+              placeholder="Enter your username"
+              class="w-full border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 p-3 rounded-lg outline-none transition"
+            />
+          </div>
+
+          <div>
+            <label class="block mb-1 text-sm font-medium text-gray-700">Password</label>
+            <input
+              v-model="password"
+              type="password"
+              placeholder="••••••••"
+              class="w-full border border-gray-300 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 p-3 rounded-lg outline-none transition"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 active:scale-95 transition"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <!-- error message -->
+        <p v-if="error" class="text-red-500 mt-4 text-center font-medium">
+          {{ error }}
+        </p>
+
+        <!-- success message -->
+        <p v-if="success" class="text-green-600 mt-4 text-center font-semibold">
+          {{ success }}
+        </p>
+
+        <p class="mt-6 text-sm text-center text-gray-600">
+          Don’t have an account?
+          <RouterLink to="/register" class="text-indigo-600 hover:underline"> Create one</RouterLink>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -61,7 +87,7 @@ const handleLogin = async () => {
       success.value = "Login successful 🎉 Redirecting...";
       setTimeout(() => {
         router.push("/tasks");
-      }, 1000); // wait 1s before redirect
+      }, 1200);
     } else {
       error.value = "Login failed. No token received.";
     }
