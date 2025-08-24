@@ -1,10 +1,27 @@
 <template>
-  <div class="min-h-screen bg-gray-50 p-6">
-    <div class="max-w-2xl mx-auto bg-white shadow-xl rounded-2xl p-6">
-      <h1 class="text-2xl font-extrabold mb-6 text-gray-800 flex items-center">
-        📋 My Tasks
-      </h1>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+      <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">📋 My Tasks</h1>
 
+        <div class="flex items-center space-x-4">
+          <!-- User Name -->
+          <span class="text-gray-700 font-medium">User</span>
+
+          <!-- Logout Button -->
+          <button
+            @click="logout"
+            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition"
+          >
+            Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Tasks Card -->
+    <div class="max-w-2xl mx-auto bg-white shadow-xl rounded-2xl p-6 mt-6">
       <!-- Add Task -->
       <form @submit.prevent="addTask" class="flex mb-6">
         <input
@@ -27,10 +44,7 @@
           class="flex items-center justify-between bg-gray-100 hover:bg-gray-200 p-4 rounded-lg transition"
         >
           <span
-            :class="[
-              'text-gray-800 font-medium',
-              { 'line-through text-gray-500 italic': task.completed }
-            ]"
+            :class="[ 'text-gray-800 font-medium', { 'line-through text-gray-500 italic': task.completed } ]"
           >
             {{ task.title }}
           </span>
@@ -69,10 +83,12 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import api from "@/api";
 
 const tasks = ref([]);
 const newTask = ref("");
+const router = useRouter();
 
 const fetchTasks = async () => {
   try {
@@ -113,6 +129,11 @@ const deleteTask = async (id) => {
   } catch (err) {
     console.error(err);
   }
+};
+
+const logout = () => {
+  localStorage.removeItem("token");
+  router.push("/login");
 };
 
 onMounted(fetchTasks);
